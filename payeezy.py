@@ -118,3 +118,49 @@ def process_purchase(transaction_total,
     response = post_transaction(request_body)
 
     return response
+
+
+def is_transaction_approved(response):
+    """
+    Returns True if transaction approved and False otherwise.
+
+    The gateway_resp_code will always be “00” for a successful transaction, indicating that there were no errors
+    attempting to process the transaction. The bank_resp_code will vary based on the response from the issuing bank.
+
+    Complete list of bank response codes:
+    https://support.payeezy.com/hc/en-us/articles/203730509-First-Data-Payeezy-Gateway-Bank-Response-Codes
+    """
+    # TODO find humane way to manage the codes
+    VALID_HTTP_STATUS_CODES = [200, 201, 202]
+    VALID_BANK_RESPONSE_CODES = ['100', '101', '102', '103', '104', '105', '106', '107', '108', '109', '110', '111',
+                                 '164']
+
+    # get response status code
+    http_status_code = response.status_code
+
+    if http_status_code in VALID_HTTP_STATUS_CODES:
+        # get response data
+        response_data = response.json()
+
+        # get gateway_resp_code
+        gateway_response_code = response_data['gateway_resp_code']
+
+        # compare gate_way_resp code to '00'
+        gateway_response_is_valid = False
+        if gateway_response_code == '00':
+            gateway_response_is_valid = True
+
+        # get bank_resp_code
+        bank_response_code = response_data['bank_resp_code']
+
+        # compare bank_resp_code to valid(successful) codes
+        bank_response_is_valid = False
+        if bank_response_code in VALID_BANK_RESPONSE_CODES:
+            bank_response_is_valid = True
+
+        # transaction approved if BOTH gateway_resp_code and bank_resp_code are valid(successful) codes:
+        if gateway_response_is_valid and bank_response_is_valid:
+            return True
+
+    # transaction failed
+    return False
