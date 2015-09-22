@@ -5,11 +5,14 @@ import hmac
 import hashlib
 import base64
 import json
+import requests
 
 
+# constants
 API_KEY = 'y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a'
 API_SECRET = '86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7'
 TOKEN = 'fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6'
+URL = 'https://api-cert.payeezy.com/v1/transactions'
 
 
 def generate_hmac(request_body):
@@ -43,3 +46,42 @@ def generate_headers(authorization, nonce, timestamp):
     }
 
     return headers
+
+
+def process_authorization(transaction_total,
+                          card_type,
+                          card_number,
+                          card_expiry,
+                          card_cvv,
+                          cardholder_name,
+                          merchant_reference=None):
+    # https://developer.payeezy.com/creditcardpayment/apis/post/transactions
+
+    request_body = {
+        "merchant_ref": merchant_reference,
+        "transaction_type": "authorize",
+        "method": "credit_card",
+        "amount": transaction_total,
+        "currency_code": "USD",     # TODO allow different currency codes
+        "credit_card": {
+            "type": card_type,
+            "cardholder_name": cardholder_name,
+            "card_number": card_number,
+            "exp_date": card_expiry,
+            "cvv": card_cvv
+        }
+    }
+    
+    # get payload
+    payload = json.dumps(request_body)
+
+    # get HMAC
+    authorization, nonce, timestamp = generate_hmac(payload)
+
+    # get headers
+    headers = generate_headers(authorization, nonce, timestamp)
+
+    # post transaction
+    response = requests.post(URL, data=payload, headers=headers)
+
+    return response
