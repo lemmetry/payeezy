@@ -164,3 +164,20 @@ def is_transaction_approved(response):
 
     # transaction failed
     return False
+
+
+def report_transaction_error_messages(response):
+    # get response data from response object
+    response_data = response.json()
+
+    # get error messages
+    response_error = response_data['Error']
+    response_error_messages = response_error['messages']
+
+    # add all error messages to the report
+    error_messages_to_report = []
+    for response_error_message in response_error_messages:
+        error_description = response_error_message['description']
+        error_messages_to_report.append(error_description)
+
+    return error_messages_to_report
