@@ -30,3 +30,16 @@ def generate_hmac(request_body):
     authorization = base64.b64encode(hmac_in_hex.encode('ascii'))
 
     return authorization, nonce, timestamp
+
+
+def generate_headers(authorization, nonce, timestamp):
+    headers = {
+        "apikey": API_KEY,
+        "token": TOKEN,
+        "Content-Type": "application/json",
+        "Authorization": authorization,
+        "nonce": nonce,
+        "timestamp": timestamp
+    }
+
+    return headers
