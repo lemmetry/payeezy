@@ -15,10 +15,7 @@ TOKEN = 'fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6'
 URL = 'https://api-cert.payeezy.com/v1/transactions'
 
 
-def generate_hmac(request_body):
-    # get payload
-    payload = json.dumps(request_body)
-
+def generate_hmac(payload):
     # Cryptographically strong random number
     nonce = str(int(binascii.hexlify(os.urandom(16)), 16))
 
@@ -48,6 +45,22 @@ def generate_headers(authorization, nonce, timestamp):
     return headers
 
 
+def post_transaction(request_body):
+    # get payload
+    payload = json.dumps(request_body)
+
+    # get HMAC
+    authorization, nonce, timestamp = generate_hmac(payload=payload)
+
+    # get headers
+    headers = generate_headers(authorization, nonce, timestamp)
+
+    # post transaction
+    response = requests.post(URL, data=payload, headers=headers)
+
+    return response
+
+
 def process_authorization(transaction_total,
                           card_type,
                           card_number,
@@ -72,17 +85,7 @@ def process_authorization(transaction_total,
         }
     }
 
-    # get payload
-    payload = json.dumps(request_body)
-
-    # get HMAC
-    authorization, nonce, timestamp = generate_hmac(payload)
-
-    # get headers
-    headers = generate_headers(authorization, nonce, timestamp)
-
-    # post transaction
-    response = requests.post(URL, data=payload, headers=headers)
+    response = post_transaction(request_body)
 
     return response
 
@@ -112,16 +115,6 @@ def process_purchase(transaction_total,
         }
     }
 
-    # get payload
-    payload = json.dumps(request_body)
-
-    # get HMAC
-    authorization, nonce, timestamp = generate_hmac(payload)
-
-    # get headers
-    headers = generate_headers(authorization, nonce, timestamp)
-
-    # post transaction
-    response = requests.post(URL, data=payload, headers=headers)
+    response = post_transaction(request_body)
 
     return response
