@@ -71,7 +71,47 @@ def process_authorization(transaction_total,
             "cvv": card_cvv
         }
     }
-    
+
+    # get payload
+    payload = json.dumps(request_body)
+
+    # get HMAC
+    authorization, nonce, timestamp = generate_hmac(payload)
+
+    # get headers
+    headers = generate_headers(authorization, nonce, timestamp)
+
+    # post transaction
+    response = requests.post(URL, data=payload, headers=headers)
+
+    return response
+
+
+def process_purchase(transaction_total,
+                     card_type,
+                     card_number,
+                     card_expiry,
+                     card_cvv,
+                     cardholder_name,
+                     merchant_reference=None):
+    # https://developer.payeezy.com/creditcardpayment/apis/post/transactions
+
+    request_body = {
+        "merchant_ref": merchant_reference,
+        "transaction_type": "purchase",
+        "method": "credit_card",
+        "amount": transaction_total,
+        "partial_redemption": "false",
+        "currency_code": "USD",
+        "credit_card": {
+            "type": card_type,
+            "cardholder_name": cardholder_name,
+            "card_number": card_number,
+            "exp_date": card_expiry,
+            "cvv": card_cvv
+        }
+    }
+
     # get payload
     payload = json.dumps(request_body)
 
