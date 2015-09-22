@@ -167,6 +167,10 @@ def is_transaction_approved(response):
 
 
 def report_transaction_error_messages(response):
+    """
+    Gets error messages from response to HTTP request for invalid transactions.
+    Returns list.
+    """
     # get response data from response object
     response_data = response.json()
 
