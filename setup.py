@@ -1,8 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+
 
 setup(
     name='payeezy',
-    version='1.0.0a1',
+    version='1.0.1',
     description='Unofficial Python 3 module to process basic(purchase and authorize) transactions with Payeezy',
     url='https://github.com/lemmetry/payeezy',
     author='Artem Kisel',
@@ -15,5 +16,6 @@ setup(
         'Topic :: Office/Business :: Financial :: Point-Of-Sale',
     ],
     keywords='Payeezy purchase authorize transaction FirstData',
-
+    packages=find_packages(),
+    install_requires=['requests'],
 )
