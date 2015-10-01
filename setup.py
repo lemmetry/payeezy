@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='payeezy',
-    version='1.0.1',
+    version='1.0.2',
     description='Unofficial Python 3 module to process basic(purchase and authorize) transactions with Payeezy',
     url='https://github.com/lemmetry/payeezy',
     author='Artem Kisel',
@@ -17,5 +17,5 @@ setup(
     ],
     keywords='Payeezy purchase authorize transaction FirstData',
     packages=find_packages(),
-    install_requires=['requests'],
+    install_requires=[],
 )
