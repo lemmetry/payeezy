@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='payeezy',
-    version='1.0.2',
+    version='1.0.3',
     description='Unofficial Python 3 module to process basic(purchase and authorize) transactions with Payeezy',
     url='https://github.com/lemmetry/payeezy',
     author='Artem Kisel',
