@@ -17,13 +17,13 @@ class Transaction(object):
     def __init__(self):
         self.transaction_response = None
 
-    def get_transaction_response(self):
+    def __get_transaction_response(self):
         return self.transaction_response
 
-    def set_transaction_response(self, response_value):
+    def __set_transaction_response(self, response_value):
         self.transaction_response = response_value
 
-    def generate_hmac(self, payload):
+    def __generate_hmac(self, payload):
         # Cryptographically strong random number
         nonce = str(int(binascii.hexlify(os.urandom(16)), 16))
 
@@ -39,8 +39,8 @@ class Transaction(object):
 
         return authorization, nonce, timestamp
 
-    def generate_headers(self, payload):
-        authorization, nonce, timestamp = self.generate_hmac(payload)
+    def __generate_headers(self, payload):
+        authorization, nonce, timestamp = self.__generate_hmac(payload)
 
         headers = {
             'apikey': self.API_KEY,
@@ -77,9 +77,9 @@ class Transaction(object):
         }
 
         payload = json.dumps(request_body)
-        headers = self.generate_headers(payload)
+        headers = self.__generate_headers(payload)
         response = requests.post(url=self.URL, data=payload, headers=headers)
-        self.set_transaction_response(response)
+        self.__set_transaction_response(response)
 
     def process_purchase(self,
                          transaction_total,
@@ -107,9 +107,9 @@ class Transaction(object):
         }
 
         payload = json.dumps(request_body)
-        headers = self.generate_headers(payload)
+        headers = self.__generate_headers(payload)
         response = requests.post(url=self.URL, data=payload, headers=headers)
-        self.set_transaction_response(response)
+        self.__set_transaction_response(response)
 
     def is_transaction_approved(self):
         """
@@ -126,7 +126,7 @@ class Transaction(object):
         VALID_BANK_RESPONSE_CODES = ['100', '101', '102', '103', '104', '105', '106', '107', '108', '109', '110', '111',
                                      '164']
 
-        response = self.get_transaction_response()
+        response = self.__get_transaction_response()
 
         # get response status code
         http_status_code = response.status_code
@@ -163,7 +163,7 @@ class Transaction(object):
         Gets error messages from response to HTTP request for invalid transactions.
         Returns list.
         """
-        response = self.get_transaction_response()
+        response = self.__get_transaction_response()
 
         # get response data from response object
         response_data = response.json()
