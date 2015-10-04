@@ -1,37 +1,36 @@
 import unittest
+from payeezy import api
 from payeezy import transactions
 
 
 payeezy = transactions.Transaction
-payeezy.TOKEN = 'fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6'
-payeezy.API_SECRET = '86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7'
 payeezy.API_KEY = 'y6pWAJNyJyjGv66IsVuWnklkKUPFbb0a'
+payeezy.API_SECRET = '86fbae7030253af3cd15faef2a1f4b67353e41fb6799f576b5093ae52901e6f7'
+payeezy.TOKEN = 'fdoa-a480ce8951daa73262734cf102641994c1e55e7cdf4c02b6'
+payeezy.URL = 'https://api-cert.payeezy.com/v1/transactions'
 
 
 class OverallTestCase(unittest.TestCase):
 
     def test_authorization(self):
-        transaction = payeezy()
-        transaction.process_authorization('2499', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
-        self.assertTrue(transaction.is_transaction_approved())
+        transaction = api.process_authorization('2499', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertTrue(transaction_approved)
 
 
 class ProcessPaymentTestCase(unittest.TestCase):
 
     def test_payment_with_clean_data(self):
-        transaction = payeezy()
-        transaction.process_purchase('2499', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
+        transaction = api.process_purchase('2499', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
 
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertTrue(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertTrue(transaction_approved)
 
     def test_payment_without_transaction_total(self):
+        transaction = api.process_purchase('', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
 
-        transaction = payeezy()
-        transaction.process_purchase('', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
-
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertFalse(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertFalse(transaction_approved)
 
         transaction_error_messages = transaction.report_transaction_error_messages()
         # according to payeezy sample, expected error message may ALSO be:
@@ -40,12 +39,10 @@ class ProcessPaymentTestCase(unittest.TestCase):
         self.assertEqual(transaction_error_messages, expected_error_messages)
 
     def test_payment_without_card_type(self):
+        transaction = api.process_purchase('2499', '', '4005519200000004', '1019', '123', 'Donald Duck')
 
-        transaction = payeezy()
-        transaction.process_purchase('2499', '', '4005519200000004', '1019', '123', 'Donald Duck')
-
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertFalse(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertFalse(transaction_approved)
 
         transaction_error_messages = transaction.report_transaction_error_messages()
         # according to payeezy sample, expected error message may ALSO be:
@@ -54,12 +51,10 @@ class ProcessPaymentTestCase(unittest.TestCase):
         self.assertEqual(transaction_error_messages, expected_error_messages)
 
     def test_payment_without_card_number(self):
+        transaction = api.process_purchase('2499', 'visa', '', '1019', '123', 'Donald Duck')
 
-        transaction = payeezy()
-        transaction.process_purchase('2499', 'visa', '', '1019', '123', 'Donald Duck')
-
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertFalse(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertFalse(transaction_approved)
 
         transaction_error_messages = transaction.report_transaction_error_messages()
         # according to payeezy sample, expected error message may ALSO be:
@@ -71,12 +66,10 @@ class ProcessPaymentTestCase(unittest.TestCase):
         self.assertEqual(transaction_error_messages, expected_error_messages)
 
     def test_payment_without_card_expiry(self):
+        transaction = api.process_purchase('2499', 'visa', '4005519200000004', '', '123', 'Donald Duck')
 
-        transaction = payeezy()
-        transaction.process_purchase('2499', 'visa', '4005519200000004', '', '123', 'Donald Duck')
-
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertFalse(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertFalse(transaction_approved)
 
         transaction_error_messages = transaction.report_transaction_error_messages()
         # according to payeezy sample, expected error message SUPPOSED to be:
@@ -87,12 +80,10 @@ class ProcessPaymentTestCase(unittest.TestCase):
     @unittest.expectedFailure
     # payeezy sandbox API does **not** check cvv and transaction is being approved
     def test_payment_without_card_cvv(self):
+        transaction = api.process_purchase('2499', 'visa', '4005519200000004', '1019', '', 'Donald Duck')
 
-        transaction = payeezy()
-        transaction.process_purchase('2499', 'visa', '4005519200000004', '1019', '', 'Donald Duck')
-
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertFalse(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertFalse(transaction_approved)
 
         transaction_error_messages = transaction.report_transaction_error_messages()
         # according to payeezy sample, expected error message SUPPOSED to be:
@@ -103,12 +94,10 @@ class ProcessPaymentTestCase(unittest.TestCase):
     @unittest.expectedFailure
     # Fails with 400 instead of the relevant API error
     def test_payment_without_cardholder_name(self):
+        transaction = api.process_purchase('2499', 'visa', '4005519200000004', '1019', '123', '')
 
-        transaction = payeezy()
-        transaction.process_purchase('2499', 'visa', '4005519200000004', '1019', '123', '')
-
-        transaction_is_approved = transaction.is_transaction_approved()
-        self.assertFalse(transaction_is_approved)
+        transaction_approved = transaction.is_transaction_approved()
+        self.assertFalse(transaction_approved)
 
         transaction_error_messages = transaction.report_transaction_error_messages()
         # according to payeezy sample, expected error message SUPPOSED to be:

@@ -4,7 +4,6 @@ import time
 import hmac
 import hashlib
 import base64
-import json
 import requests
 
 
@@ -12,9 +11,10 @@ class Transaction(object):
     API_KEY = ''
     API_SECRET = ''
     TOKEN = ''
-    URL = 'https://api-cert.payeezy.com/v1/transactions'
+    URL = ''
 
-    def __init__(self):
+    def __init__(self, payload):
+        self.payload = payload
         self.transaction_response = None
 
     def __get_transaction_response(self):
@@ -23,14 +23,14 @@ class Transaction(object):
     def __set_transaction_response(self, response_value):
         self.transaction_response = response_value
 
-    def __generate_hmac(self, payload):
+    def __generate_hmac(self):
         # Cryptographically strong random number
         nonce = str(int(binascii.hexlify(os.urandom(16)), 16))
 
         # Epoch timestamp in milli seconds
         timestamp = str(int(round(time.time() * 1000)))
 
-        data = self.API_KEY + nonce + timestamp + self.TOKEN + payload
+        data = self.API_KEY + nonce + timestamp + self.TOKEN + self.payload
         # Make sure the HMAC hash is in hex
         hmac_in_hex = hmac.new(self.API_SECRET.encode(), msg=data.encode(), digestmod=hashlib.sha256).hexdigest()
 
@@ -39,8 +39,8 @@ class Transaction(object):
 
         return authorization, nonce, timestamp
 
-    def __generate_headers(self, payload):
-        authorization, nonce, timestamp = self.__generate_hmac(payload)
+    def __generate_headers(self):
+        authorization, nonce, timestamp = self.__generate_hmac()
 
         headers = {
             'apikey': self.API_KEY,
@@ -50,66 +50,13 @@ class Transaction(object):
             'nonce': nonce,
             'timestamp': timestamp
         }
+
         return headers
 
-    def process_authorization(self,
-                              transaction_total,
-                              card_type,
-                              card_number,
-                              card_expiry,
-                              card_cvv,
-                              cardholder_name,
-                              merchant_reference=''):
-
-        request_body = {
-            "merchant_ref": merchant_reference,
-            "transaction_type": "authorize",
-            "method": "credit_card",
-            "amount": transaction_total,
-            "currency_code": "USD",
-            "credit_card": {
-                "type": card_type,
-                "cardholder_name": cardholder_name,
-                "card_number": card_number,
-                "exp_date": card_expiry,
-                "cvv": card_cvv
-            }
-        }
-
-        payload = json.dumps(request_body)
-        headers = self.__generate_headers(payload)
-        response = requests.post(url=self.URL, data=payload, headers=headers)
-        self.__set_transaction_response(response)
-
-    def process_purchase(self,
-                         transaction_total,
-                         card_type,
-                         card_number,
-                         card_expiry,
-                         card_cvv,
-                         cardholder_name,
-                         merchant_reference=''):
-
-        request_body = {
-            "merchant_ref": merchant_reference,
-            "transaction_type": "purchase",
-            "method": "credit_card",
-            "amount": transaction_total,
-            "partial_redemption": "false",
-            "currency_code": "USD",
-            "credit_card": {
-                "type":  card_type,
-                "cardholder_name": cardholder_name,
-                "card_number": card_number,
-                "exp_date": card_expiry,
-                "cvv": card_cvv
-            }
-        }
-
-        payload = json.dumps(request_body)
-        headers = self.__generate_headers(payload)
-        response = requests.post(url=self.URL, data=payload, headers=headers)
-        self.__set_transaction_response(response)
+    def run_transaction(self):
+        headers = self.__generate_headers()
+        transaction_results = requests.post(url=self.URL, data=self.payload, headers=headers)
+        self.__set_transaction_response(transaction_results)
 
     def is_transaction_approved(self):
         """

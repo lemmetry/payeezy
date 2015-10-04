@@ -11,13 +11,13 @@ This is an **unofficial** package-to-be for processing transactions with `Payeez
 
 .. code-block:: python
 
-    >>> purchase_result = transaction.process_purchase(transaction_total='2499',
-                                                       card_type='VISA',
-                                                       card_number='4005519200000004',
-                                                       card_expiry='1218',
-                                                       card_cvv='123',
-                                                       cardholder_name='Donald Duck',
-                                                       merchant_reference='Sale')
+    >>> transaction = api.process_purchase(transaction_total='2499',
+                                           card_type='VISA',
+                                           card_number='4005519200000004',
+                                           card_expiry='1218',
+                                           card_cvv='123',
+                                           cardholder_name='Donald Duck',
+                                           merchant_reference='Sale')
 
 
 Installation:
