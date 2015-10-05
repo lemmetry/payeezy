@@ -5,13 +5,14 @@ import hmac
 import hashlib
 import base64
 import requests
+from payeezy.__make_headers import *
 
 
 class Transaction(object):
-    API_KEY = ''
-    API_SECRET = ''
-    TOKEN = ''
-    URL = ''
+    API_KEY = None
+    API_SECRET = None
+    TOKEN = None
+    URL = None
 
     def __init__(self, payload):
         self.payload = payload
@@ -39,22 +40,9 @@ class Transaction(object):
 
         return authorization, nonce, timestamp
 
-    def __generate_headers(self):
+    def run_transaction(self, api_key, token):
         authorization, nonce, timestamp = self.__generate_hmac()
-
-        headers = {
-            'apikey': self.API_KEY,
-            'token': self.TOKEN,
-            'Content-type': 'application/json',
-            'Authorization': authorization,
-            'nonce': nonce,
-            'timestamp': timestamp
-        }
-
-        return headers
-
-    def run_transaction(self):
-        headers = self.__generate_headers()
+        headers = make_headers(api_key, token, authorization, nonce, timestamp)
         transaction_results = requests.post(url=self.URL, data=self.payload, headers=headers)
         self.__set_transaction_response(transaction_results)
 
