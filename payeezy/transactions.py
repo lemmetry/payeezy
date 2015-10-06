@@ -1,11 +1,6 @@
-import binascii
-import os
-import time
-import hmac
-import hashlib
-import base64
 import requests
 from payeezy.__make_headers import *
+from payeezy.__generate_hmac import *
 
 
 class Transaction(object):
@@ -24,24 +19,8 @@ class Transaction(object):
     def __set_transaction_response(self, response_value):
         self.transaction_response = response_value
 
-    def __generate_hmac(self):
-        # Cryptographically strong random number
-        nonce = str(int(binascii.hexlify(os.urandom(16)), 16))
-
-        # Epoch timestamp in milli seconds
-        timestamp = str(int(round(time.time() * 1000)))
-
-        data = self.API_KEY + nonce + timestamp + self.TOKEN + self.payload
-        # Make sure the HMAC hash is in hex
-        hmac_in_hex = hmac.new(self.API_SECRET.encode(), msg=data.encode(), digestmod=hashlib.sha256).hexdigest()
-
-        # Authorization : base64 of hmac hash
-        authorization = base64.b64encode(hmac_in_hex.encode('ascii'))
-
-        return authorization, nonce, timestamp
-
     def run_transaction(self):
-        authorization, nonce, timestamp = self.__generate_hmac()
+        authorization, nonce, timestamp = generate_hmac(self.API_KEY, self.API_SECRET, self.TOKEN, self.payload)
         headers = make_headers(self.API_KEY, self.TOKEN, authorization, nonce, timestamp)
         transaction_results = requests.post(url=self.URL, data=self.payload, headers=headers)
         self.__set_transaction_response(transaction_results)
