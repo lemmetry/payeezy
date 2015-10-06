@@ -9,5 +9,6 @@ install: "pip install -r requirements.txt"
 script:
   - python example.py
   - python -m unittest -v tests.test_api
+  - python -m unittest -v tests.test_generate_hmac
   - python -m unittest -v tests.test_make_headers
   - python -m unittest -v tests.test_make_request_bodies
