@@ -40,9 +40,9 @@ class Transaction(object):
 
         return authorization, nonce, timestamp
 
-    def run_transaction(self, api_key, token):
+    def run_transaction(self):
         authorization, nonce, timestamp = self.__generate_hmac()
-        headers = make_headers(api_key, token, authorization, nonce, timestamp)
+        headers = make_headers(self.API_KEY, self.TOKEN, authorization, nonce, timestamp)
         transaction_results = requests.post(url=self.URL, data=self.payload, headers=headers)
         self.__set_transaction_response(transaction_results)
 

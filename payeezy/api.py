@@ -16,7 +16,7 @@ def process_authorization(transaction_total,
     payload = json.dumps(request_body)
 
     authorization = transactions.Transaction(payload)
-    authorization.run_transaction(authorization.API_KEY, authorization.TOKEN)
+    authorization.run_transaction()
 
     return authorization
 
@@ -34,6 +34,6 @@ def process_purchase(transaction_total,
     payload = json.dumps(request_body)
 
     purchase = transactions.Transaction(payload)
-    purchase.run_transaction(purchase.API_KEY, purchase.TOKEN)
+    purchase.run_transaction()
 
     return purchase
