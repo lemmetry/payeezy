@@ -1,6 +1,6 @@
 import requests
-from payeezy.__make_headers import *
-from payeezy.__generate_hmac import *
+from payeezy.__make_headers import make_headers
+from payeezy.__generate_hmac import generate_hmac
 
 
 class Transaction(object):

@@ -1,5 +1,5 @@
 import unittest
-from payeezy.__make_request_bodies import *
+from payeezy.__make_request_bodies import make_request_body_for_purchase
 
 
 class TestMakeRequestBodyForPurchases(unittest.TestCase):

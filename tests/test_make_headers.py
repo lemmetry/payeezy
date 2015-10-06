@@ -1,5 +1,5 @@
 import unittest
-from payeezy.__make_headers import *
+from payeezy.__make_headers import make_headers
 
 
 class TestMakeHeadersWithEmptyOrNoneData(unittest.TestCase):

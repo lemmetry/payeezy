@@ -1,5 +1,5 @@
 import unittest
-from payeezy.__generate_hmac import *
+from payeezy.__generate_hmac import generate_hmac
 
 
 class TestGenerateHmacReturnsNonEmptyValues(unittest.TestCase):

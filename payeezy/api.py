@@ -1,6 +1,7 @@
 import json
 from payeezy import transactions
-from payeezy.__make_request_bodies import *
+from payeezy.__make_request_bodies import make_request_body_for_authorization
+from payeezy.__make_request_bodies import make_request_body_for_purchase
 
 
 def process_authorization(transaction_total,
