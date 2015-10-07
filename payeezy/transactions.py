@@ -4,12 +4,11 @@ from payeezy.__generate_hmac import generate_hmac
 
 
 class Transaction(object):
-    API_KEY = None
-    API_SECRET = None
-    TOKEN = None
-    URL = None
-
-    def __init__(self, payload):
+    def __init__(self, api_key, api_secret, token, url, payload):
+        self.api_key = api_key
+        self.api_secret = api_secret
+        self.token = token
+        self.url = url
         self.payload = payload
         self.transaction_response = None
 
@@ -20,9 +19,9 @@ class Transaction(object):
         self.transaction_response = response_value
 
     def run_transaction(self):
-        authorization, nonce, timestamp = generate_hmac(self.API_KEY, self.API_SECRET, self.TOKEN, self.payload)
-        headers = make_headers(self.API_KEY, self.TOKEN, authorization, nonce, timestamp)
-        transaction_results = requests.post(url=self.URL, data=self.payload, headers=headers)
+        authorization, nonce, timestamp = generate_hmac(self.api_key, self.api_secret, self.token, self.payload)
+        headers = make_headers(self.api_key, self.token, authorization, nonce, timestamp)
+        transaction_results = requests.post(url=self.url, data=self.payload, headers=headers)
         self.__set_transaction_response(transaction_results)
 
     def is_transaction_approved(self):
