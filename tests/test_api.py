@@ -10,6 +10,53 @@ URL = 'https://api-cert.payeezy.com/v1/transactions'
 payeezy = api.API(API_KEY, API_SECRET, TOKEN, URL)
 
 
+class BadSecretValues(unittest.TestCase):
+
+    def test_bad_api_key(self):
+        bad_api_keys = ['', None]
+
+        for bad_api_key in bad_api_keys:
+            with self.assertRaises(ValueError) as cm:
+                api.API(bad_api_key, API_SECRET, TOKEN, URL)
+
+            raised_message = str(cm.exception)
+            expected_message = 'API Key cannot be empty or None'
+            self.assertEqual(raised_message, expected_message)
+
+    def test_bad_api_secret(self):
+        bad_api_secrets = ['', None]
+
+        for bad_api_secret in bad_api_secrets:
+            with self.assertRaises(ValueError) as cm:
+                api.API(API_KEY, bad_api_secret, TOKEN, URL)
+
+            raised_message = str(cm.exception)
+            expected_message = 'API Secret cannot be empty or None'
+            self.assertEqual(raised_message, expected_message)
+
+    def test_bad_token(self):
+        bad_tokens = ['', None]
+
+        for bad_token in bad_tokens:
+            with self.assertRaises(ValueError) as cm:
+                api.API(API_KEY, API_SECRET, bad_token, URL)
+
+            raised_message = str(cm.exception)
+            expected_message = 'Token cannot be empty or None'
+            self.assertEqual(raised_message, expected_message)
+
+    def test_bad_url(self):
+        bad_urls = ['', None]
+
+        for bad_url in bad_urls:
+            with self.assertRaises(ValueError) as cm:
+                api.API(API_KEY, API_SECRET, TOKEN, bad_url)
+
+            raised_message = str(cm.exception)
+            expected_message = 'Url cannot be empty or None'
+            self.assertEqual(raised_message, expected_message)
+
+
 class OverallTestCase(unittest.TestCase):
 
     def test_authorization(self):

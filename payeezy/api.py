@@ -6,19 +6,19 @@ from payeezy.__make_request_bodies import make_request_body_for_purchase
 class API(object):
     def __init__(self, api_key, api_secret, token, url):
         if not api_key:
-            raise ValueError()
+            raise ValueError('API Key cannot be empty or None')
         self.api_key = api_key
 
         if not api_secret:
-            raise ValueError
+            raise ValueError('API Secret cannot be empty or None')
         self.api_secret = api_secret
 
         if not token:
-            raise ValueError
+            raise ValueError('Token cannot be empty or None')
         self.token = token
 
         if not url:
-            raise ValueError
+            raise ValueError('Url cannot be empty or None')
         self.url = url
 
     def process_authorization(self,
