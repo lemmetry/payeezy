@@ -109,7 +109,7 @@ class ProcessPaymentTestCase(unittest.TestCase):
         # 'The card number must be numeric',
         # 'The credit card number check failed'
         # 'American Express card number must be 15 digits'
-        expected_error_messages = ['The card number must be 16 digits']
+        expected_error_messages = ['The card number cannot be empty']
         self.assertEqual(transaction_error_messages, expected_error_messages)
 
     def test_payment_without_card_expiry(self):
