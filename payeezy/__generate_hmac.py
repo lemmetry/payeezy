@@ -22,5 +22,6 @@ def generate_hmac(api_key, api_secret, token, payload):
 
     # Authorization : base64 of hmac hash
     authorization = base64.b64encode(hmac_in_hex.encode('ascii'))
+    authorization = authorization.decode('utf-8')
 
     return authorization, nonce, timestamp
