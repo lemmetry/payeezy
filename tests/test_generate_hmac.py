@@ -26,5 +26,6 @@ class TestGenerateHmacReturnsNonEmptyValues(unittest.TestCase):
             expected_message = 'Payload value cannot be empty or None'
             self.assertEqual(raised_message, expected_message)
 
+
 if __name__ == '__main__':
     unittest.main()

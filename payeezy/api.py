@@ -3,6 +3,7 @@ from payeezy import transactions
 from payeezy.__make_request_bodies import make_request_body_for_authorization
 from payeezy.__make_request_bodies import make_request_body_for_purchase
 
+
 class API(object):
     def __init__(self, api_key, api_secret, token, url):
         if not api_key:
