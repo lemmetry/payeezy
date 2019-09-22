@@ -12,13 +12,15 @@ payeezy = api.API(API_KEY, API_SECRET, TOKEN, URL)
 transaction = payeezy.process_purchase(transaction_total='2499',
                                        card_type='VISA',
                                        card_number='4005519200000004',
-                                       card_expiry='1218',
+                                       card_expiry='1220',
                                        card_cvv='123',
                                        cardholder_name='Donald Duck',
                                        merchant_reference='Sale')
 
-transaction_approved = transaction.is_transaction_approved()
-if transaction_approved:
-    print('Thank you for your purchase')
+transaction_response = transaction.transaction_response.json()
+
+if transaction_response['transaction_status'] == 'approved':
+    for key in transaction_response:
+        print('%s : %s' % (key, transaction_response[key]))
 else:
-    print(transaction.report_transaction_error_messages)
+    print(transaction_response['Error'])
