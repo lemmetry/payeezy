@@ -68,10 +68,24 @@ class OverallTestCase(unittest.TestCase):
 class ProcessPaymentTestCase(unittest.TestCase):
 
     def test_payment_with_clean_data(self):
-        transaction = payeezy.process_purchase('2499', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
+        cards_to_test = [
+            ['Visa', '4012000033330026'],
+            ['Visa', '4005519200000004'],
+            ['Mastercard', '5424180279791732'],
+            ['Mastercard', '5526399000648568'],
+            ['Mastercard', '5405010100000016'],
+            ['American Express', '373953192351004'],
+            ['American Express', '341111597241002'],
+            ['Discover', '6510000000001248'],
+        ]
 
-        transaction_approved = transaction.is_transaction_approved()
-        self.assertTrue(transaction_approved)
+        for card_to_test in cards_to_test:
+            card_type = card_to_test[0]
+            card_number = card_to_test[1]
+
+            transaction = payeezy.process_purchase('2499', card_type, card_number, '1019', '123', 'Donald Duck')
+            transaction_approved = transaction.is_transaction_approved()
+            self.assertTrue(transaction_approved)
 
     def test_payment_without_transaction_total(self):
         transaction = payeezy.process_purchase('', 'visa', '4005519200000004', '1019', '123', 'Donald Duck')
