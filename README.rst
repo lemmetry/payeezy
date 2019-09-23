@@ -7,7 +7,7 @@ Payeezy
 .. image:: https://travis-ci.org/lemmetry/payeezy.svg?branch=master
     :target: https://travis-ci.org/lemmetry/payeezy
 
-This is an **unofficial** package-to-be for processing transactions with `Payeezy <https://developer.payeezy.com/>`_ using Python3.2
+This is an **unofficial** package-to-be for processing transactions with `Payeezy <https://developer.payeezy.com/>`_ using Python3.6
 
 .. code-block:: python
 

@@ -1,10 +1,13 @@
 from setuptools import setup, find_packages
 
+with open('README.rst') as f:
+    readme = f.read()
 
 setup(
     name='payeezy',
-    version='1.1.01',
+    version='1.1.02',
     description='Unofficial Python 3 module to process basic(purchase and authorize) transactions with Payeezy',
+    long_description=readme,
     url='https://github.com/lemmetry/payeezy',
     author='Artem Kisel',
     author_email='artem.a.kisel@gmail.com',
