@@ -7,6 +7,12 @@ Payeezy
 .. image:: https://travis-ci.org/lemmetry/payeezy.svg?branch=master
     :target: https://travis-ci.org/lemmetry/payeezy
 
+.. image:: https://coveralls.io/repos/github/lemmetry/payeezy/badge.svg?branch=master
+    :target: https://coveralls.io/github/lemmetry/payeezy?branch=master
+
+.. image:: https://pepy.tech/badge/payeezy
+    :target: https://pepy.tech/project/payeezy
+
 This is an **unofficial** package-to-be for processing transactions with `Payeezy <https://developer.payeezy.com/>`_ using Python3.6
 
 .. code-block:: python
