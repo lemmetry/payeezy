@@ -4,6 +4,7 @@ python:
   - "3.6"  
 # command to install dependencies
 install: "pip install -r requirements.txt"
+  - pip3 install --user coveralls
 # command to run tests
 script:
   - python example.py
@@ -11,3 +12,6 @@ script:
   - python -m unittest -v tests.test_generate_hmac
   - python -m unittest -v tests.test_make_headers
   - python -m unittest -v tests.test_make_request_bodies
+  - coverage run --source=payeezy setup.py test
+after_success:
+  - coveralls
